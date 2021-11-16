@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+</head>
+<body>
+    
+
+    <h1>
+        Annuaire
+    </h1>
+
+    <input id="typing-input" type="text" >
+    <button id='search-btn'>chercher</button>
+    <button id='list-btn'>tout</button>
+    <div id='result-div'></div>
+      
+
+    <script>
+            function display(data){
+                //1.selectionner la div de resultat
+                const div= document.getElementById('result-div');
+                //2.effacer son contenu
+                div.replaceChildren();
+                //3.@pour chaque element dans data
+                for(const element of data)
+                //@debut de bloc
+                {
+                    //4.creer une nouvelle div
+                    const row = document.createElement('div');
+                    //5.changer le contenu de cette div avec object.values(element).joint('-')
+                    row.innerHTML= Object.values(element).join('-');
+                    //.6.rattacher la div créée à la div resultat
+                    div.appendChild(row);
+                //@finBloc
+                }
+            }
+
+            function  handleList(){
+                fetch('http://localhost:4000')
+                .then(function(response){
+                    return response.json();
+                })
+                .then(function(data){
+                    display(data);
+                });
+                
+            }
+
+            const listBtn = document.getElementById('list-btn')
+            listBtn.addEventListener('click', handleList)
+
+            /**
+ * Q2 : Modifier la fonction handleSearch pour appeler le service search
+ * sur l'endpoint : POST http://localhost:4000/search
+ * en envoyant une donnée "text" avec comme valeur ce que l'utilisateur a
+ * entré dans l'input.
+ * Afficher les resultats provenant du service.
+ 
+ 
+ 
+ fetch('**URL DE L’API**', {                 // Endpoint
+    method: 'POST',                         // HTTP method
+    headers: {
+        'Accept': 'application/json',       // Server's response format
+        'Content-Type': 'application/json', // Body's format
+    },
+    body: JSON.stringify(data),             // Payload
+})
+.then(function(response) {
+    return response.json();
+})
+.then(function(data) {
+    // Handle data here...
+})
+.catch(function(error) {
+    // Handle error here...
+});
+ 
+ */
+            
+
+            function handleSearch() {
+
+                var input = document.getElementById("typing-input").value;
+            
+
+                fetch('http://localhost:4000/search',{
+                 method: 'POST',
+                 headers: {
+                    'Accept': 'application/json',       
+                    'Content-Type': 'application/json', 
+                },
+                body: JSON.stringify({text:input})
+                
+                })
+                .then(function(response){
+                    return response.json();
+                })
+                .then(function(data){
+                    display(data);
+                });
+            
+            // document.getElementById('typing-input').value = '';
+        }
+
+            const searchBtn = document.getElementById('search-btn')
+            searchBtn.addEventListener('click', handleSearch)
+    </script>
+   
+    </body>
+</html>
